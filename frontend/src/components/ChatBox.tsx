@@ -4,7 +4,7 @@ import type { Me } from "../App";
 import { useNavigate } from "react-router-dom";
 import { useRelativeTime } from "../lib/useRelativeTime";
 
-const socket = io("http://localhost:5000", { withCredentials: true });
+const socket = io("https://letsdiscusslive-1.onrender.com", { withCredentials: true });
 
 export default function ChatBox({
   postId,
