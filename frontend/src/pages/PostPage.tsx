@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { api } from "../lib/api";
 import ChatBox from "../components/ChatBox";
 import type { Me } from "../App";
-import { useRelativeTime } from "../lib/useRelativeTime";
 
 export default function PostPage({ me }:{ me: Me }) {
   const { id } = useParams<{ id: string }>();
