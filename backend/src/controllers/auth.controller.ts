@@ -5,7 +5,8 @@ import { signJwt } from "../utils/jwt.js";
 
 const cookieOpts = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  // secure: process.env.NODE_ENV === "production",
+  secure: true,
   sameSite: "none" as const, //allowing cross-site cookies for production //bcz frontend and backend is on different domain
   maxAge: 7 * 24 * 60 * 60 * 1000
 };
