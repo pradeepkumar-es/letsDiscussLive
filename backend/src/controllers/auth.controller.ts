@@ -35,4 +35,4 @@ export const login = async (req: Request, res: Response) => {
 export const me = async (req: Request, res: Response) => res.json(req.user);
 
 export const logout = async (_req: Request, res: Response) =>
-  res.clearCookie(process.env.COOKIE_NAME!, { httpOnly: true, sameSite: "lax" }).json({ ok: true });
+  res.clearCookie(process.env.COOKIE_NAME!, { httpOnly: true, sameSite: "none" }).json({ ok: true });
