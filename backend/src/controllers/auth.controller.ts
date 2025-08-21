@@ -5,10 +5,10 @@ import { signJwt } from "../utils/jwt.js";
 
 const cookieOpts = {
   httpOnly: true,
-  // secure: process.env.NODE_ENV === "production",
-  secure: true,
-  sameSite: "none" as const, //allowing cross-site cookies for production //bcz frontend and backend is on different domain
-  maxAge: 7 * 24 * 60 * 60 * 1000
+  secure: true,               // always true in production (HTTPS)
+  sameSite: "none" as const,  // allows cross-site cookie
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  domain: ".onrender.com"   //  for cross-subdomain cookies
 };
 
 export const signup = async (req: Request, res: Response) => {
