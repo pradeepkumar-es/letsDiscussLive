@@ -14,7 +14,7 @@ const start = async () => {
   const httpServer = createServer(app);
 
   const io = new Server(httpServer, {
-    cors: { origin: process.env.CLIENT_ORIGIN, credentials: true }
+    cors: { origin: process.env.CLIENT_ORIGIN || "http://localhost:5173", credentials: true }
   });
   registerChatNamespace(io);
 

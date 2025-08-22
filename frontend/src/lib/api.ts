@@ -1,6 +1,5 @@
 import axios from "axios";
 export const api = axios.create({
-  // baseURL: "http://localhost:5000/api",
-  baseURL: "https://letsdiscusslive-1.onrender.com/api",
+  baseURL: import.meta.env.BACKEND_API_URL || "http://localhost:5000/api",
   withCredentials: true // send/receive auth cookie
 });

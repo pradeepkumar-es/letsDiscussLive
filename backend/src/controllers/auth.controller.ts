@@ -8,7 +8,6 @@ const cookieOpts = {
   secure: true,               // always true in production (HTTPS)
   sameSite: "none" as const,  // allows cross-site cookie
   maxAge: 7 * 24 * 60 * 60 * 1000,
-  domain: ".onrender.com"   //  for cross-subdomain cookies
 };
 
 export const signup = async (req: Request, res: Response) => {
