@@ -7,6 +7,11 @@ import authRoutes from "./routes/auth.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import { errorHandler } from "./middlewares/error.js";
+import path from "path"; 
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createApp = () => {
   const app = express();
@@ -19,6 +24,14 @@ export const createApp = () => {
   app.use("/api/auth", authRoutes);
   app.use("/api/posts", postRoutes);
   app.use("/api/messages", messageRoutes);
+
+    //  Serve frontend build 
+  const distPath = path.join(__dirname, "dist");
+  app.use(express.static(distPath));
+
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(distPath, "index.html"));
+  });
   app.use(errorHandler);
   return app;
 };
