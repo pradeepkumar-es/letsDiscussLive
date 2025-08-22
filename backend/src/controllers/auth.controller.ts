@@ -5,8 +5,9 @@ import { signJwt } from "../utils/jwt.js";
 
 const cookieOpts = {
   httpOnly: true,
-  secure: true,               // always true in production (HTTPS)
-  sameSite: "none" as const,  // allows cross-site cookie
+  secure: process.env.NODE_ENV === "production", //true for production //set env variable production in deployed server and developemnt in local env
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  domain: ".onrender.com", 
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
