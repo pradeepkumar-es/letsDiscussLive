@@ -1,66 +1,51 @@
 import { Request, Response } from "express";
-import { StatusCodes as S } from "http-status-codes";
 import User from "../models/User.js";
-import jwt from "jsonwebtoken";
-// import { signJwt } from "../utils/jwt.js";
-// import { CookieOptions } from "express";
+import { signJwt } from "../utils/jwt.js";
+import { AuthRequest } from "../middlewares/auth.js";
 
-// // Set cookie options
-// const cookieOpts: CookieOptions = {
-//   httpOnly: true,
-//   secure: process.env.NODE_ENV === "production",       // true in production, false in dev
-//   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // TS-safe union type
-//   // domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // domain only for prod
-//   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-// };
-
-const generateToken = (userId: string, userName:string, userEmail:string) => {
-  return jwt.sign({ userId, userName, userEmail }, process.env.JWT_SECRET!, { expiresIn: "7d" });
-};
-
+// Signup
 export const signup = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-  const user = new User({ username, email, password });
-  await user.save();
+  try {
+    const { username, email, password } = req.body;
+    const user = await User.create({ username, email, password });
 
-  // const token = signJwt({ id: user.id, username: user.username }, process.env.JWT_SECRET!);
-  // res.cookie(process.env.COOKIE_NAME!, token, cookieOpts)
-  //    .status(S.CREATED)
-  //    .json({ id: user.id, username: user.username, email: user.email });
+    const token = signJwt(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET!
+    );
 
-  const token = generateToken(user.id, user.username, user.email);
-  res.json({ token });
-};
-
-export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user || !(await user.comparePassword(password))) {
-    return res.status(S.UNAUTHORIZED).json({ error: "Invalid credentials" });
+    res.status(201).json({ id: user.id, username: user.username, token });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
   }
-
-  // const token = signJwt({ id: user.id, username: user.username }, process.env.JWT_SECRET!);
-
-  // res.cookie(process.env.COOKIE_NAME!, token, cookieOpts)
-  //    .json({ id: user.id, username: user.username, email: user.email });
-
-  const token = generateToken(user.id, user.username, user.email);
-  res.json({ token });
 };
 
-export const me = async (req: Request, res: Response) => {
+// Login
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const token = signJwt(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET!
+    );
+
+    res.json({ id: user.id, username: user.username, token });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get logged-in user
+export const me = (req: AuthRequest, res: Response) => {
+  if (!req.user) return res.status(401).json({ error: "Unauthorized" });
   res.json(req.user);
 };
-
-export const logout = async (_req: Request, res: Response) => {
-  // res
-  //   .clearCookie(process.env.COOKIE_NAME!, {
-  //     httpOnly: true,
-  //     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  //     secure: process.env.NODE_ENV === "production",
-  //     domain:
-  //       process.env.NODE_ENV === "production" ? ".onrender.com" : undefined,
-  //   })
-    res.json({ ok: true, message:"Logged out Successfully" });
+// Logout (frontend should also remove token)
+export const logout = (_req: Request, res: Response) => {
+  res.json({ ok: true, message: "Logged out successfully" });
 };

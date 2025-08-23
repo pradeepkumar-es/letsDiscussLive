@@ -13,9 +13,9 @@ export default function Signup({ onAuthed }: { onAuthed: (m: Me) => void }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const r = await api.post("/auth/signup", { username, email, password });
+      const r = await api.post("/auth/login", { email, password });
+      localStorage.setItem("token", r.data.token); // <-- save token
       onAuthed({ id: r.data.id, username: r.data.username });
-      localStorage.setItem("token", r.data.token);
       nav("/"); // redirect to Home
     } catch (e: any) {
       setErr(e?.response?.data?.error || "Signup failed");
@@ -26,10 +26,28 @@ export default function Signup({ onAuthed }: { onAuthed: (m: Me) => void }) {
     <form onSubmit={submit} className="space-y-3">
       <h1 className="text-xl font-bold">Signup</h1>
       {err && <p className="text-red-600 text-sm">{err}</p>}
-      <input className="border p-2 w-full" placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} />
-      <input className="border p-2 w-full" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-      <input className="border p-2 w-full" placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />
-      <button className="bg-blue-600 text-white px-4 py-2 rounded">Create account</button>
+      <input
+        className="border p-2 w-full"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        className="border p-2 w-full"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        className="border p-2 w-full"
+        placeholder="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button className="bg-blue-600 text-white px-4 py-2 rounded">
+        Create account
+      </button>
     </form>
   );
 }
