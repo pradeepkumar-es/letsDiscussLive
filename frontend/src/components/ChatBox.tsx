@@ -4,9 +4,7 @@ import type { Me } from "../App";
 import { useNavigate } from "react-router-dom";
 import { useRelativeTime } from "../lib/useRelativeTime";
 
-// const socket = io( import.meta.env.VITE_BACKEND_BASE_URL, { withCredentials: true });
-//relative url bcz of same origin now we are using
-const socket = io( "/", { withCredentials: true });
+const socket = io( import.meta.env.VITE_BACKEND_BASE_URL, { withCredentials: true });
 
 export default function ChatBox({
   postId,
