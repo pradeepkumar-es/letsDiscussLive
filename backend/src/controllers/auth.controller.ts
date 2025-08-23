@@ -8,7 +8,7 @@ import { CookieOptions } from "express";
 const cookieOpts: CookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",       // true in production, false in dev
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "lax", // TS-safe union type
+  sameSite: "None",
   // domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // domain only for prod
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
