@@ -14,6 +14,8 @@ export default function Login({ onAuthed }: { onAuthed: (m: Me) => void }) {
     try {
       const r = await api.post("/auth/login", { email, password });
       onAuthed({ id: r.data.id, username: r.data.username });
+      // Save JWT token in localStorage
+      localStorage.setItem("token", r.data.token);
       nav("/"); // redirect to Home
     } catch (e: any) {
       setErr(e?.response?.data?.error || "Login failed");

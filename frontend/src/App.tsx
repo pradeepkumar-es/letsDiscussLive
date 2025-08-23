@@ -5,10 +5,12 @@ import Signup from "./pages/Signup";
 import PostPage from "./pages/PostPage";
 import { useEffect, useState } from "react";
 import { api } from "./lib/api";
+import { useNavigate } from "react-router-dom";
 
 export type Me = { id: string; username: string } | null;
 
 export default function App() {
+  const navigate = useNavigate();
   const [me, setMe] = useState<Me>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -18,6 +20,18 @@ export default function App() {
 
   if (!loaded) return <div className="p-6">Loading...</div>;
 
+    const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout"); // clears cookie (if any) on backend
+    } catch (err) {
+      console.error("Logout failed:", err);
+    } finally {
+      // Always clear token on client
+      localStorage.removeItem("token");
+      setMe(null); // reset user state
+      navigate("/login"); // redirect to login
+    }
+  };
   return (
     <div className="max-w-2xl mx-auto p-4">
       <header className="flex justify-between items-center mb-6">
@@ -26,7 +40,7 @@ export default function App() {
           {me ? (
             <>
               <span className="text-sm">Hi, {me.username}</span>
-              <button onClick={() => api.post("/auth/logout").then(()=>setMe(null))}
+              <button onClick={handleLogout}
                       className="text-sm underline">Logout</button>
             </>
           ) : (

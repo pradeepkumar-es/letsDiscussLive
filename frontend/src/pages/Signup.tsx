@@ -15,6 +15,7 @@ export default function Signup({ onAuthed }: { onAuthed: (m: Me) => void }) {
     try {
       const r = await api.post("/auth/signup", { username, email, password });
       onAuthed({ id: r.data.id, username: r.data.username });
+      localStorage.setItem("token", r.data.token);
       nav("/"); // redirect to Home
     } catch (e: any) {
       setErr(e?.response?.data?.error || "Signup failed");
