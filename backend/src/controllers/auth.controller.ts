@@ -5,17 +5,13 @@ import jwt from "jsonwebtoken";
 // import { signJwt } from "../utils/jwt.js";
 // import { CookieOptions } from "express";
 
-// // Set cookie options
-// const cookieOpts: CookieOptions = {
-//   httpOnly: true,
-//   secure: process.env.NODE_ENV === "production",       // true in production, false in dev
-//   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // TS-safe union type
-//   // domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // domain only for prod
-//   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-// };
-
-const generateToken = (userId: string, userName:string, userEmail:string) => {
-  return jwt.sign({ userId, userName, userEmail }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+// Set cookie options
+const cookieOpts: CookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",       // true in production, false in dev
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // TS-safe union type
+  // domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined, // domain only for prod
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
 export const signup = async (req: Request, res: Response) => {
