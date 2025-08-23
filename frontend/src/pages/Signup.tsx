@@ -13,7 +13,7 @@ export default function Signup({ onAuthed }: { onAuthed: (m: Me) => void }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const r = await api.post("/auth/login", { email, password });
+      const r = await api.post("/auth/signup", { username, email, password });
       localStorage.setItem("token", r.data.token); // <-- save token
       onAuthed({ id: r.data.id, username: r.data.username });
       nav("/"); // redirect to Home
